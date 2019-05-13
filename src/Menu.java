@@ -16,7 +16,12 @@ public class Menu {
             System.out.println("1 -> Remove a Car");
             System.out.println("2 -> Modify a Car");
             System.out.println("3 -> Show info of car");
-            System.out.println("4 -> Size");
+            System.out.println("4 -> Quantity of elements");
+            System.out.println("5 -> Quantity of elements with condition");
+            System.out.println("6 -> List of elements");
+            System.out.println("7 -> List of elements with condition");
+            System.out.println("8 -> Compact and save");
+            System.out.println("9 -> Exit");
             int option = scanner.nextInt();
             switch (option) {
                 case 0:
@@ -63,7 +68,18 @@ public class Menu {
                     printCar(tree.searchTree(new Car(scanner.nextInt())));
                     break;
                 case 4:
-
+                    break;
+                case 5:
+                    break;
+                case 6:
+                    break;
+                case 7:
+                    break;
+                case 8:
+                    break;
+                case 9:
+                    saveOnDisk(tree);
+                    System.exit(0);
                     break;
             }
         }
