@@ -276,8 +276,8 @@ public class RedBlackTree<T extends Comparable<T>> {
 
     // search the tree for the key k
     // and return the corresponding node
-    public Node searchTree(Comparable<T> k) {
-        return searchTreeHelper(this.root, k);
+    public T searchTree(Comparable<T> k) {
+        return (T) searchTreeHelper(this.root, k).data;
     }
 
     // find the node with the minimum key
