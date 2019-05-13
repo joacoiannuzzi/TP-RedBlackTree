@@ -35,6 +35,23 @@ public class RedBlackTree<T extends Comparable<T>> {
         }
     }
 
+    public boolean isEmpty(){
+        return root == null;
+    }
+
+    public Node getLeft(){
+        return root.left;
+    }
+
+    public Node getRight(){
+        return root.right;
+    }
+
+    public Node getRoot() {
+        return this.root;
+    }
+
+
     private Node searchTreeHelper(Node node, Comparable<T> key) {
         if (node == TNULL || key.compareTo((T) node.data) == 0) {
             return node;
@@ -419,9 +436,6 @@ public class RedBlackTree<T extends Comparable<T>> {
         fixInsert(node);
     }
 
-    public Node getRoot() {
-        return this.root;
-    }
 
     // delete the node from the tree
     public void deleteNode(Comparable<T> data) {
