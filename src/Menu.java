@@ -68,6 +68,7 @@ public class Menu {
                     printCar(tree.search(new Car(scanner.nextInt())));
                     break;
                 case 4:
+
                     break;
                 case 5:
                     break;
@@ -136,5 +137,12 @@ public class Menu {
             e.printStackTrace();
         }
         return binaryTree;
+    }
+
+    public int amountOfElements(RedBlackTree<Car> tree) {
+        if (tree.isEmpty()) {
+            return 0;
+        }
+        return 1;
     }
 }
