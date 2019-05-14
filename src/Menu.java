@@ -43,7 +43,7 @@ public class Menu {
                         System.out.println("0 -> Change car patent");
                         System.out.println("1 -> Change year");
                         System.out.println("2 -> Change model");
-                        System.out.println("3 -> Exit");
+                        System.out.println("3 -> Go back");
                         o = scanner.nextInt();
                         switch (o) {
                             case 0:
@@ -65,7 +65,7 @@ public class Menu {
                     break;
                 case 3:
                     System.out.println("Enter key: ");
-                    printCar(tree.searchTree(new Car(scanner.nextInt())));
+                    printCar(tree.search(new Car(scanner.nextInt())));
                     break;
                 case 4:
                     break;
@@ -94,15 +94,15 @@ public class Menu {
     }
 
     public void changeCarPatent(RedBlackTree<Car> tree, Car car, int carPatent) {
-        tree.searchTree(car).setCarPatent(carPatent);
+        tree.search(car).setCarPatent(carPatent);
     }
 
     public void changeYear(RedBlackTree<Car> tree, Car car, int year) {
-        tree.searchTree(car).setYear(year);
+        tree.search(car).setYear(year);
     }
 
     public void changeModel(RedBlackTree<Car> tree, Car car, String model) {
-        tree.searchTree(car).setModel(model);
+        tree.search(car).setModel(model);
     }
 
     public void printCar(Car car) {
