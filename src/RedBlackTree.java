@@ -1,8 +1,9 @@
+import java.io.Serializable;
 
-public class RedBlackTree {
+public class RedBlackTree<T extends Comparable<T>> implements Serializable {
 
-    private class Node {
-        int data; // holds the key
+    private class Node<T extends Comparable<T>> implements Serializable{
+        Comparable<T> data; // holds the key
         Node parent; // pointer to the parent
         Node left; // pointer to left child
         Node right; // pointer to right child
@@ -11,6 +12,22 @@ public class RedBlackTree {
 
     private Node root;
     private Node TNULL;
+
+    public boolean isEmpty() {
+        return root == null;
+    }
+
+    public RedBlackTree<T> getLeft() {
+        RedBlackTree<T> r =  new RedBlackTree<>();
+        r.root = root.left;
+        return r;
+    }
+
+    public RedBlackTree<T> getRight() {
+        RedBlackTree<T> r =  new RedBlackTree<>();
+        r.root = root.right;
+        return r;
+    }
 
     private void preOrderHelper(Node node) {
         if (node != TNULL) {
@@ -36,15 +53,17 @@ public class RedBlackTree {
         }
     }
 
-    private Node searchTreeHelper(Node node, int key) {
-        if (node == TNULL || key == node.data) {
+    private Node search(Node node, Comparable<T> key) {
+        if (node == TNULL) {
+            throw new RuntimeException("Could not find the element");
+        }
+        if (key.compareTo((T) node.data) == 0)
             return node;
-        }
 
-        if (key < node.data) {
-            return searchTreeHelper(node.left, key);
+        if (key.compareTo((T) node.data) < 0) {
+            return search(node.left, key);
         }
-        return searchTreeHelper(node.right, key);
+        return search(node.right, key);
     }
 
     // fix the rb tree modified by the delete operation
@@ -128,7 +147,7 @@ public class RedBlackTree {
         v.parent = u.parent;
     }
 
-    private void deleteNodeHelper(Node node, int key) {
+    private void deleteNodeHelper(Node node, Comparable<T> key) {
         // find the node containing key
         Node z = TNULL;
         Node x, y;
@@ -137,7 +156,7 @@ public class RedBlackTree {
                 z = node;
             }
 
-            if (node.data <= key) {
+            if (node.data.compareTo(key) <= 1) {
                 node = node.right;
             } else {
                 node = node.left;
@@ -277,8 +296,8 @@ public class RedBlackTree {
 
     // search the tree for the key k
     // and return the corresponding node
-    public Node searchTree(int k) {
-        return searchTreeHelper(this.root, k);
+    public T search(Comparable<T> k) {
+        return (T) search(this.root, k).data;
     }
 
     // find the node with the minimum key
@@ -374,7 +393,7 @@ public class RedBlackTree {
 
     // insert the key to the tree in its appropriate position
     // and fix the tree
-    public void insert(int key) {
+    public void insert(Comparable<T> key) {
         // Ordinary Binary Search Insertion
         Node node = new Node();
         node.parent = null;
@@ -388,7 +407,7 @@ public class RedBlackTree {
 
         while (x != TNULL) {
             y = x;
-            if (node.data < x.data) {
+            if (node.data.compareTo(x.data) < 0) {
                 x = x.left;
             } else {
                 x = x.right;
@@ -399,7 +418,7 @@ public class RedBlackTree {
         node.parent = y;
         if (y == null) {
             root = node;
-        } else if (node.data < y.data) {
+        } else if (node.data.compareTo(y.data) < 0) {
             y.left = node;
         } else {
             y.right = node;
@@ -425,7 +444,7 @@ public class RedBlackTree {
     }
 
     // delete the node from the tree
-    public void deleteNode(int data) {
+    public void deleteNode(Comparable<T> data) {
         deleteNodeHelper(this.root, data);
     }
 

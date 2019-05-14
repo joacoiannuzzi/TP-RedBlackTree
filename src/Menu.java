@@ -3,8 +3,15 @@ import java.util.Scanner;
 
 public class Menu {
 
+    private String file = "/Users/joacoiannuzzi/Documents/Austral/Prog/Algoritmos y estructuras de datos/u6/TP-RedBlackTree/src/BinaryTreeFile";
+
+    public static void main(String[] args) {
+        Menu menu = new Menu();
+        menu.startMenu();
+    }
+
     public void startMenu() {
-        RedBlackTree<Car> tree = getFromDisk();
+        RedBlackTree<Car> tree = getFromDisk(file);
         if (tree == null)
             tree = new RedBlackTree<>();
 
@@ -26,8 +33,7 @@ public class Menu {
             switch (option) {
                 case 0:
                     System.out.println("Enter a: key, car patent, year, model");
-                    insert(tree, new Car(scanner.nextInt(), scanner.nextInt(), scanner.nextInt(),
-                            scanner.nextLine()));
+                    insert(tree, new Car(scanner.nextInt(), scanner.nextInt(), scanner.nextInt(), scanner.next()));
                     break;
                 case 1:
                     System.out.println("Enter a key to remove: ");
@@ -68,7 +74,7 @@ public class Menu {
                     printCar(tree.search(new Car(scanner.nextInt())));
                     break;
                 case 4:
-
+                    System.out.println("Quantity: " + amountOfElements(tree));
                     break;
                 case 5:
                     break;
@@ -79,7 +85,7 @@ public class Menu {
                 case 8:
                     break;
                 case 9:
-                    saveOnDisk(tree);
+                    saveOnDisk(tree, file);
                     System.exit(0);
                     break;
             }
@@ -107,17 +113,16 @@ public class Menu {
     }
 
     public void printCar(Car car) {
-        System.out.println(car.getKey() + ": ");
         System.out.println("\tCar patent: " + car.getCarPatent());
         System.out.println("\tYear: " + car.getYear());
         System.out.println("\tModel: " + car.getModel());
     }
 
     //salva en disco al arbol binario
-    public void saveOnDisk(RedBlackTree<Car> a) {
+    public void saveOnDisk(RedBlackTree<Car> a, String path) {
         try {
             ObjectOutputStream outputStream = new ObjectOutputStream(
-                    new FileOutputStream(new File("BinaryTreeFile")));
+                    new FileOutputStream(new File(path)));
             outputStream.writeObject(a);
             outputStream.close();
         } catch (IOException e) {
@@ -126,11 +131,11 @@ public class Menu {
     }
 
     //recupera del disco el arbol binario
-    public RedBlackTree<Car> getFromDisk() {
+    public RedBlackTree<Car> getFromDisk(String path) {
         RedBlackTree<Car> binaryTree = null;
         try {
             ObjectInputStream inputStream = new ObjectInputStream(
-                    new FileInputStream(new File("BinaryTreeFile")));
+                    new FileInputStream(new File(path)));
             binaryTree = (RedBlackTree<Car>) inputStream.readObject();
             inputStream.close();
         } catch (IOException | ClassNotFoundException e) {
@@ -143,6 +148,6 @@ public class Menu {
         if (tree.isEmpty()) {
             return 0;
         }
-        return 1;
+        return 1 + amountOfElements(tree.getLeft()) + amountOfElements(tree.getRight());
     }
 }

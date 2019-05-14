@@ -1,4 +1,6 @@
-public class Car implements Comparable<Car> {
+import java.io.Serializable;
+
+public class Car implements Comparable<Car>, Serializable {
 
     private int key, carPatent, year;
     private String model;
