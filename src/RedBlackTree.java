@@ -1,55 +1,51 @@
-public class RedBlackTree<T extends Comparable<T>> {
-    private class Node<T extends Comparable<T>> {
 
-        T data; // holds the key
+public class RedBlackTree {
+
+    private class Node {
+        int data; // holds the key
         Node parent; // pointer to the parent
         Node left; // pointer to left child
         Node right; // pointer to right child
         int color; // 1 . Red, 0 . Black
-
     }
+
     private Node root;
+    private Node TNULL;
 
-    public RedBlackTree() {
-        root = null;
-    }
-
-    public boolean isEmpty() {
-        return root == null;
-    }
-
-    public T getRoot() {
-        return (T) this.root.data;
-    }
-
-    public RedBlackTree<T> getLeft() {
-        RedBlackTree<T> t = new RedBlackTree<>();
-        t.root = root.left;
-        return t;
-    }
-
-    public RedBlackTree<T> getRight() {
-        RedBlackTree<T> t = new RedBlackTree<>();
-        t.root = root.right;
-        return t;
-    }
-
-    public T search(Comparable<T> k) {
-        return (T) search(this.root, k).data;
-    }
-
-    private Node search(Node node, Comparable<T> key) {
-        if (node == null)
-            throw new RuntimeException("Not found");
-        if(key.compareTo((T) node.data) == 0){
-            return node;
-        }else if(key.compareTo((T) node.data) < 0){
-            return search(node.left, key);
-        } else {
-            return search(node.right, key);
+    private void preOrderHelper(Node node) {
+        if (node != TNULL) {
+            System.out.print(node.data + " ");
+            preOrderHelper(node.left);
+            preOrderHelper(node.right);
         }
     }
 
+    private void inOrderHelper(Node node) {
+        if (node != TNULL) {
+            inOrderHelper(node.left);
+            System.out.print(node.data + " ");
+            inOrderHelper(node.right);
+        }
+    }
+
+    private void postOrderHelper(Node node) {
+        if (node != TNULL) {
+            postOrderHelper(node.left);
+            postOrderHelper(node.right);
+            System.out.print(node.data + " ");
+        }
+    }
+
+    private Node searchTreeHelper(Node node, int key) {
+        if (node == TNULL || key == node.data) {
+            return node;
+        }
+
+        if (key < node.data) {
+            return searchTreeHelper(node.left, key);
+        }
+        return searchTreeHelper(node.right, key);
+    }
 
     // fix the rb tree modified by the delete operation
     private void fixDelete(Node x) {
@@ -120,10 +116,11 @@ public class RedBlackTree<T extends Comparable<T>> {
         x.color = 0;
     }
 
-    private void rbTransplant(Node u, Node v) {
+
+    private void rbTransplant(Node u, Node v){
         if (u.parent == null) {
             root = v;
-        } else if (u == u.parent.left) {
+        } else if (u == u.parent.left){
             u.parent.left = v;
         } else {
             u.parent.right = v;
@@ -131,16 +128,16 @@ public class RedBlackTree<T extends Comparable<T>> {
         v.parent = u.parent;
     }
 
-    private void deleteNodeHelper(Node node, Comparable<T> key) {
+    private void deleteNodeHelper(Node node, int key) {
         // find the node containing key
         Node z = TNULL;
         Node x, y;
-        while (node != TNULL) {
-            if (node.data.equals(key)) {
+        while (node != TNULL){
+            if (node.data == key) {
                 z = node;
             }
 
-            if (node.data.compareTo(key) <= 0) {
+            if (node.data <= key) {
                 node = node.right;
             } else {
                 node = node.left;
@@ -177,59 +174,13 @@ public class RedBlackTree<T extends Comparable<T>> {
             y.left.parent = y;
             y.color = z.color;
         }
-        if (yOriginalColor == 0) {
+        if (yOriginalColor == 0){
             fixDelete(x);
         }
     }
-    public void insert(Comparable<T> key) {
-        // Ordinary Binary Search Insertion
-        Node node = new Node();
-        node.parent = null;
-        node.data = key;
-        node.left = TNULL;
-        node.right = TNULL;
-        node.color = 1; // new node must be red
-
-        Node y = null;
-        Node x = this.root;
-
-        while (x != TNULL) {
-            y = x;
-            if (node.data.compareTo(x.data) < 0) {
-                x = x.left;
-            } else {
-                x = x.right;
-            }
-        }
-
-        // y is parent of x
-        node.parent = y;
-        if (y == null) {
-            root = node;
-        } else if (node.data.compareTo(y.data) < 0) {
-            y.left = node;
-        } else {
-            y.right = node;
-        }
-
-        // if new node is a root node, simply return
-        if (node.parent == null) {
-            node.color = 0;
-            return;
-        }
-
-        // if the grandparent is null, simply return
-        if (node.parent.parent == null) {
-            return;
-        }
-
-        // Fix the tree
-        fixInsert(node);
-    }
 
     // fix the red-black tree
-
-    private void fixInsert(Node k) {
+    private void fixInsert(Node k){
         Node u;
         while (k.parent.color == 1) {
             if (k.parent == k.parent.parent.right) {
@@ -291,12 +242,46 @@ public class RedBlackTree<T extends Comparable<T>> {
                 indent += "|    ";
             }
 
-            String sColor = root.color == 1 ? "RED" : "BLACK";
+            String sColor = root.color == 1?"RED":"BLACK";
             System.out.println(root.data + "(" + sColor + ")");
             printHelper(root.left, indent, false);
             printHelper(root.right, indent, true);
         }
     }
+
+    public RedBlackTree() {
+        TNULL = new Node();
+        TNULL.color = 0;
+        TNULL.left = null;
+        TNULL.right = null;
+        root = TNULL;
+    }
+
+    // Pre-Order traversal
+    // Node.Left Subtree.Right Subtree
+    public void preorder() {
+        preOrderHelper(this.root);
+    }
+
+    // In-Order traversal
+    // Left Subtree . Node . Right Subtree
+    public void inorder() {
+        inOrderHelper(this.root);
+    }
+
+    // Post-Order traversal
+    // Left Subtree . Right Subtree . Node
+    public void postorder() {
+        postOrderHelper(this.root);
+    }
+
+    // search the tree for the key k
+    // and return the corresponding node
+    public Node searchTree(int k) {
+        return searchTreeHelper(this.root, k);
+    }
+
+    // find the node with the minimum key
     public Node minimum(Node node) {
         while (node.left != TNULL) {
             node = node.left;
@@ -386,12 +371,61 @@ public class RedBlackTree<T extends Comparable<T>> {
         y.right = x;
         x.parent = y;
     }
-    // insert the key to the tree in its appropriate position
 
+    // insert the key to the tree in its appropriate position
     // and fix the tree
+    public void insert(int key) {
+        // Ordinary Binary Search Insertion
+        Node node = new Node();
+        node.parent = null;
+        node.data = key;
+        node.left = TNULL;
+        node.right = TNULL;
+        node.color = 1; // new node must be red
+
+        Node y = null;
+        Node x = this.root;
+
+        while (x != TNULL) {
+            y = x;
+            if (node.data < x.data) {
+                x = x.left;
+            } else {
+                x = x.right;
+            }
+        }
+
+        // y is parent of x
+        node.parent = y;
+        if (y == null) {
+            root = node;
+        } else if (node.data < y.data) {
+            y.left = node;
+        } else {
+            y.right = node;
+        }
+
+        // if new node is a root node, simply return
+        if (node.parent == null){
+            node.color = 0;
+            return;
+        }
+
+        // if the grandparent is null, simply return
+        if (node.parent.parent == null) {
+            return;
+        }
+
+        // Fix the tree
+        fixInsert(node);
+    }
+
+    public Node getRoot(){
+        return this.root;
+    }
 
     // delete the node from the tree
-    public void deleteNode(Comparable<T> data) {
+    public void deleteNode(int data) {
         deleteNodeHelper(this.root, data);
     }
 
@@ -400,8 +434,8 @@ public class RedBlackTree<T extends Comparable<T>> {
         printHelper(this.root, "", true);
     }
 
-    public static void main(String[] args){
-        RedBlackTree<Integer> bst = new RedBlackTree();
+    public static void main(String [] args){
+        RedBlackTree bst = new RedBlackTree();
         bst.insert(8);
         bst.insert(18);
         bst.insert(5);
@@ -414,4 +448,3 @@ public class RedBlackTree<T extends Comparable<T>> {
         bst.prettyPrint();
     }
 }
-
