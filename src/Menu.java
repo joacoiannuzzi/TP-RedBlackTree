@@ -1,9 +1,9 @@
 import java.io.*;
 import java.util.Scanner;
 
-public class Menu {
+public class Menu implements Serializable{
 
-    private String file = "/Users/joacoiannuzzi/Documents/Austral/Prog/Algoritmos y estructuras de datos/u6/TP-RedBlackTree/src/BinaryTreeFile";
+    private String file = "C:\\Users\\maxia\\Documents\\Universidad\\AyED\\EstructuraDeDatos\\TP-RedBlackTree\\src\\BinaryTreeFile";
 
     public static void main(String[] args) {
         Menu menu = new Menu();
@@ -77,10 +77,30 @@ public class Menu {
                     System.out.println("Quantity: " + amountOfElements(tree));
                     break;
                 case 5:
+
+                    /*todo: condition creator (año, modelo, patente) se debe elegir una entre las tres
+                    *  que sea igual el año, patente.....
+                    * */
+
+                    System.out.println("Quantity: " + amountOfElementsWithCondition(tree, new Condition() {
+                        @Override
+                        public boolean evaluate(Car car) {
+                            return car.getYear()>2000;
+                        }
+                    }));
                     break;
                 case 6:
+                    printAllCars(tree);
                     break;
                 case 7:
+
+                    printAllCarsWithCondition(tree, new Condition() {
+                        @Override
+                        public boolean evaluate(Car car) {
+                            return false;
+                        }
+                    });
+
                     break;
                 case 8:
                     break;
@@ -89,6 +109,24 @@ public class Menu {
                     System.exit(0);
                     break;
             }
+        }
+    }
+
+    private void printAllCarsWithCondition(RedBlackTree<Car> tree, Condition condition) {
+        if(!tree.isEmpty()) {
+            if(condition.evaluate(tree.getRoot())) {
+                printCar((Car) tree.getRoot());
+            }
+            printAllCars(tree.getLeft());
+            printAllCars(tree.getRight());
+        }
+    }
+
+    private void printAllCars(RedBlackTree tree) {
+        if(!tree.isEmpty()) {
+            printCar((Car) tree.getRoot());
+            printAllCars(tree.getLeft());
+            printAllCars(tree.getRight());
         }
     }
 
@@ -149,5 +187,15 @@ public class Menu {
             return 0;
         }
         return 1 + amountOfElements(tree.getLeft()) + amountOfElements(tree.getRight());
+    }
+
+    public int amountOfElementsWithCondition(RedBlackTree<Car> tree, Condition condition) {
+        if (tree.isEmpty()) {
+            return 0;
+        }
+        if(condition.evaluate(tree.getRoot())){
+            return 1 + amountOfElementsWithCondition(tree.getLeft(),condition) + amountOfElementsWithCondition(tree.getRight(), condition);
+        }
+        return amountOfElementsWithCondition(tree.getLeft(),condition) + amountOfElementsWithCondition(tree.getRight(), condition);
     }
 }

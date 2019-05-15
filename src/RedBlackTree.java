@@ -29,30 +29,6 @@ public class RedBlackTree<T extends Comparable<T>> implements Serializable {
         return r;
     }
 
-    private void preOrderHelper(Node node) {
-        if (node != TNULL) {
-            System.out.print(node.data + " ");
-            preOrderHelper(node.left);
-            preOrderHelper(node.right);
-        }
-    }
-
-    private void inOrderHelper(Node node) {
-        if (node != TNULL) {
-            inOrderHelper(node.left);
-            System.out.print(node.data + " ");
-            inOrderHelper(node.right);
-        }
-    }
-
-    private void postOrderHelper(Node node) {
-        if (node != TNULL) {
-            postOrderHelper(node.left);
-            postOrderHelper(node.right);
-            System.out.print(node.data + " ");
-        }
-    }
-
     private Node search(Node node, Comparable<T> key) {
         if (node == TNULL) {
             throw new RuntimeException("Could not find the element");
@@ -249,49 +225,12 @@ public class RedBlackTree<T extends Comparable<T>> implements Serializable {
         root.color = 0;
     }
 
-    private void printHelper(Node root, String indent, boolean last) {
-        // print the tree structure on the screen
-        if (root != TNULL) {
-            System.out.print(indent);
-            if (last) {
-                System.out.print("R----");
-                indent += "     ";
-            } else {
-                System.out.print("L----");
-                indent += "|    ";
-            }
-
-            String sColor = root.color == 1?"RED":"BLACK";
-            System.out.println(root.data + "(" + sColor + ")");
-            printHelper(root.left, indent, false);
-            printHelper(root.right, indent, true);
-        }
-    }
-
     public RedBlackTree() {
         TNULL = new Node();
         TNULL.color = 0;
         TNULL.left = null;
         TNULL.right = null;
         root = TNULL;
-    }
-
-    // Pre-Order traversal
-    // Node.Left Subtree.Right Subtree
-    public void preorder() {
-        preOrderHelper(this.root);
-    }
-
-    // In-Order traversal
-    // Left Subtree . Node . Right Subtree
-    public void inorder() {
-        inOrderHelper(this.root);
-    }
-
-    // Post-Order traversal
-    // Left Subtree . Right Subtree . Node
-    public void postorder() {
-        postOrderHelper(this.root);
     }
 
     // search the tree for the key k
@@ -439,18 +378,13 @@ public class RedBlackTree<T extends Comparable<T>> implements Serializable {
         fixInsert(node);
     }
 
-    public Node getRoot(){
-        return this.root;
+    public T getRoot(){
+        return (T) this.root.data;
     }
 
     // delete the node from the tree
     public void deleteNode(Comparable<T> data) {
         deleteNodeHelper(this.root, data);
-    }
-
-    // print the tree structure on the screen
-    public void prettyPrint() {
-        printHelper(this.root, "", true);
     }
 
     public static void main(String [] args){
@@ -464,6 +398,5 @@ public class RedBlackTree<T extends Comparable<T>> implements Serializable {
         bst.insert(40);
         bst.insert(80);
         bst.deleteNode(25);
-        bst.prettyPrint();
     }
 }
