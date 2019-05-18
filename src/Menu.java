@@ -3,7 +3,8 @@ import java.util.Scanner;
 
 public class Menu implements Serializable{
 
-    private String file = "C:\\Users\\Braian\\IdeaProjects\\TP-RedBlackTree\\src\\BinaryTreeFile";
+    private String file = "BinaryTreeFile";
+    Scanner scanner;
 
     public static void main(String[] args) {
         Menu menu = new Menu();
@@ -15,7 +16,7 @@ public class Menu implements Serializable{
         if (tree == null)
             tree = new RedBlackTree<>();
 
-        Scanner scanner = new Scanner(System.in);
+        scanner = new Scanner(System.in);
 
         while (true) {
             System.out.println("Options: ");
@@ -62,7 +63,7 @@ public class Menu implements Serializable{
                                 break;
                             case 2:
                                 System.out.println("Enter a model: ");
-                                changeModel(tree, car, scanner.nextLine());
+                                changeModel(tree, car, scanner.next());
                                 break;
                             case 3:
                                 o = 3;
@@ -77,26 +78,14 @@ public class Menu implements Serializable{
                     System.out.println("Quantity: " + amountOfElements(tree));
                     break;
                 case 5:
-                    /*todo: condition creator (año, modelo, patente) se debe elegir una entre las tres
-                    *  que sea igual el año, patente.....
-                    * */
-                    System.out.println("Select a condition: ");
-                        System.out.println("0 -> Car Year");
-                        System.out.println("1 -> Car Model");
-                        System.out.println("2 -> Car plate");
-                        System.out.println("3 -> Go back");
-                        System.out.println("Quantity: " + amountOfElementsWithCondition(tree, new carCriteria()));
+                    System.out.println("Quantity: " +
+                            amountOfElementsWithCondition(tree, conditionCreator()));
                     break;
                 case 6:
                     printAllCars(tree);
                     break;
                 case 7:
-                    System.out.println("Select a condition: ");
-                    System.out.println("0 -> Car Year");
-                    System.out.println("1 -> Car Model");
-                    System.out.println("2 -> Car plate");
-                    System.out.println("3 -> Go back");
-                    printAllCarsWithCondition(tree, new carCriteria());
+                    printAllCarsWithCondition(tree, conditionCreator());
                     break;
                 case 8:
                     break;
@@ -106,6 +95,31 @@ public class Menu implements Serializable{
                     break;
             }
         }
+    }
+
+    public Condition conditionCreator() {
+        System.out.println("Select a condition: ");
+        System.out.println("0 -> Car Year");
+        System.out.println("1 -> Car Model");
+        System.out.println("2 -> Car plate");
+        switch (scanner.nextInt()) {
+            case 0:
+                System.out.println("Enter year");
+                int h = scanner.nextInt();
+                return car -> car.getYear() == h;
+            case 1:
+                System.out.println("Enter model");
+                String j = scanner.next();
+                return car -> car.getModel().equals(j);
+            case 2:
+                System.out.println("Enter plate");
+                int p = scanner.nextInt();
+                return car -> car.getCarPlate() == p;
+            default:
+                return car -> true;
+
+        }
+
     }
 
     private void printAllCarsWithCondition(RedBlackTree<Car> tree, Condition condition) {
@@ -147,6 +161,7 @@ public class Menu implements Serializable{
     }
 
     public void printCar(Car car) {
+        System.out.println("Key: " + car.getKey());
         System.out.println("\tCar patent: " + car.getCarPlate());
         System.out.println("\tYear: " + car.getYear());
         System.out.println("\tModel: " + car.getModel());

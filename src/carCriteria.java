@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class carCriteria implements Condition<Car>{
+public class carCriteria implements Condition {
     private String condition;
 
 
