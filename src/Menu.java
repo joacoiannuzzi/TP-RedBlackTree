@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 public class Menu implements Serializable{
 
-    private String file = "C:\\Users\\maxia\\Documents\\Universidad\\AyED\\EstructuraDeDatos\\TP-RedBlackTree\\src\\BinaryTreeFile";
+    private String file = "C:\\Users\\Braian\\IdeaProjects\\TP-RedBlackTree\\src\\BinaryTreeFile";
 
     public static void main(String[] args) {
         Menu menu = new Menu();
@@ -32,7 +32,7 @@ public class Menu implements Serializable{
             int option = scanner.nextInt();
             switch (option) {
                 case 0:
-                    System.out.println("Enter a: key, car patent, year, model");
+                    System.out.println("Enter a: key, car plate, year, model");
                     insert(tree, new Car(scanner.nextInt(), scanner.nextInt(), scanner.nextInt(), scanner.next()));
                     break;
                 case 1:
@@ -46,14 +46,14 @@ public class Menu implements Serializable{
                     System.out.println("Enter an option: ");
                     int o = 0;
                     while (o != 3) {
-                        System.out.println("0 -> Change car patent");
+                        System.out.println("0 -> Change car plate");
                         System.out.println("1 -> Change year");
                         System.out.println("2 -> Change model");
                         System.out.println("3 -> Go back");
                         o = scanner.nextInt();
                         switch (o) {
                             case 0:
-                                System.out.println("Enter a car patent: ");
+                                System.out.println("Enter a car plate: ");
                                 changeCarPatent(tree, car, scanner.nextInt());
                                 break;
                             case 1:
@@ -77,30 +77,26 @@ public class Menu implements Serializable{
                     System.out.println("Quantity: " + amountOfElements(tree));
                     break;
                 case 5:
-
                     /*todo: condition creator (año, modelo, patente) se debe elegir una entre las tres
                     *  que sea igual el año, patente.....
                     * */
-
-                    System.out.println("Quantity: " + amountOfElementsWithCondition(tree, new Condition() {
-                        @Override
-                        public boolean evaluate(Car car) {
-                            return car.getYear()>2000;
-                        }
-                    }));
+                    System.out.println("Select a condition: ");
+                        System.out.println("0 -> Car Year");
+                        System.out.println("1 -> Car Model");
+                        System.out.println("2 -> Car plate");
+                        System.out.println("3 -> Go back");
+                        System.out.println("Quantity: " + amountOfElementsWithCondition(tree, new carCriteria()));
                     break;
                 case 6:
                     printAllCars(tree);
                     break;
                 case 7:
-
-                    printAllCarsWithCondition(tree, new Condition() {
-                        @Override
-                        public boolean evaluate(Car car) {
-                            return false;
-                        }
-                    });
-
+                    System.out.println("Select a condition: ");
+                    System.out.println("0 -> Car Year");
+                    System.out.println("1 -> Car Model");
+                    System.out.println("2 -> Car plate");
+                    System.out.println("3 -> Go back");
+                    printAllCarsWithCondition(tree, new carCriteria());
                     break;
                 case 8:
                     break;
@@ -115,16 +111,16 @@ public class Menu implements Serializable{
     private void printAllCarsWithCondition(RedBlackTree<Car> tree, Condition condition) {
         if(!tree.isEmpty()) {
             if(condition.evaluate(tree.getRoot())) {
-                printCar((Car) tree.getRoot());
+                printCar(tree.getRoot());
             }
-            printAllCars(tree.getLeft());
-            printAllCars(tree.getRight());
+            printAllCarsWithCondition(tree.getLeft(), condition);
+            printAllCarsWithCondition(tree.getRight(), condition);
         }
     }
 
-    private void printAllCars(RedBlackTree tree) {
+    private void printAllCars(RedBlackTree<Car> tree) {
         if(!tree.isEmpty()) {
-            printCar((Car) tree.getRoot());
+            printCar(tree.getRoot());
             printAllCars(tree.getLeft());
             printAllCars(tree.getRight());
         }
@@ -139,7 +135,7 @@ public class Menu implements Serializable{
     }
 
     public void changeCarPatent(RedBlackTree<Car> tree, Car car, int carPatent) {
-        tree.search(car).setCarPatent(carPatent);
+        tree.search(car).setCarPlate(carPatent);
     }
 
     public void changeYear(RedBlackTree<Car> tree, Car car, int year) {
@@ -151,7 +147,7 @@ public class Menu implements Serializable{
     }
 
     public void printCar(Car car) {
-        System.out.println("\tCar patent: " + car.getCarPatent());
+        System.out.println("\tCar patent: " + car.getCarPlate());
         System.out.println("\tYear: " + car.getYear());
         System.out.println("\tModel: " + car.getModel());
     }

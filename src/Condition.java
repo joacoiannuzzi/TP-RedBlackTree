@@ -1,4 +1,4 @@
-public interface Condition{
+public interface Condition<T>{
 
-    boolean evaluate(Car car);
+    boolean evaluate(T element);
 }

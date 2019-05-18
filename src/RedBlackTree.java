@@ -14,7 +14,7 @@ public class RedBlackTree<T extends Comparable<T>> implements Serializable {
     private Node TNULL;
 
     public boolean isEmpty() {
-        return root == null;
+        return root.data == null;
     }
 
     public RedBlackTree<T> getLeft() {
@@ -385,18 +385,5 @@ public class RedBlackTree<T extends Comparable<T>> implements Serializable {
     // delete the node from the tree
     public void deleteNode(Comparable<T> data) {
         deleteNodeHelper(this.root, data);
-    }
-
-    public static void main(String [] args){
-        RedBlackTree bst = new RedBlackTree();
-        bst.insert(8);
-        bst.insert(18);
-        bst.insert(5);
-        bst.insert(15);
-        bst.insert(17);
-        bst.insert(25);
-        bst.insert(40);
-        bst.insert(80);
-        bst.deleteNode(25);
     }
 }

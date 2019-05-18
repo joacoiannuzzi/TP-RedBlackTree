@@ -2,16 +2,16 @@ import java.io.Serializable;
 
 public class Car implements Comparable<Car>, Serializable {
 
-    private int key, carPatent, year;
+    private int key, carPlate, year;
     private String model;
 
     public Car(int key) {
         this.key = key;
     }
 
-    public Car(int key, int carPatent, int year, String model) {
+    public Car(int key, int carPlate, int year, String model) {
         this.key = key;
-        this.carPatent = carPatent;
+        this.carPlate = carPlate;
         this.year = year;
         this.model = model;
     }
@@ -20,8 +20,8 @@ public class Car implements Comparable<Car>, Serializable {
         return key;
     }
 
-    public int getCarPatent() {
-        return carPatent;
+    public int getCarPlate() {
+        return carPlate;
     }
 
     public int getYear() {
@@ -32,8 +32,8 @@ public class Car implements Comparable<Car>, Serializable {
         return model;
     }
 
-    public void setCarPatent(int carPatent) {
-        this.carPatent = carPatent;
+    public void setCarPlate(int carPlate) {
+        this.carPlate = carPlate;
     }
 
     public void setYear(int year) {
