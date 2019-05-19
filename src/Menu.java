@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 public class Menu implements Serializable{
 
-    private String file = "BinaryTreeFile";
+    private String file = "src/binaryTreeFile";
     Scanner scanner;
 
     public static void main(String[] args) {
@@ -38,7 +38,7 @@ public class Menu implements Serializable{
                     break;
                 case 1:
                     System.out.println("Enter a key to remove: ");
-                    delete(tree, new Car(scanner.nextInt()));
+                    logicDelete(tree, new Car(scanner.nextInt()));
                     break;
                 case 2:
                     System.out.println("Enter a key to modify: ");
@@ -88,6 +88,8 @@ public class Menu implements Serializable{
                     printAllCarsWithCondition(tree, conditionCreator());
                     break;
                 case 8:
+                    tree.compact();
+                    saveOnDisk(tree, file);
                     break;
                 case 9:
                     saveOnDisk(tree, file);
@@ -106,7 +108,7 @@ public class Menu implements Serializable{
             case 0:
                 System.out.println("Enter year");
                 int h = scanner.nextInt();
-                return car -> car.getYear() == h;
+                return car -> car.getYear() > h;
             case 1:
                 System.out.println("Enter model");
                 String j = scanner.next();
@@ -117,14 +119,12 @@ public class Menu implements Serializable{
                 return car -> car.getCarPlate() == p;
             default:
                 return car -> true;
-
         }
-
     }
 
     private void printAllCarsWithCondition(RedBlackTree<Car> tree, Condition condition) {
         if(!tree.isEmpty()) {
-            if(condition.evaluate(tree.getRoot())) {
+            if(condition.evaluate(tree.getRoot()) && !tree.nodeIsDead()) {
                 printCar(tree.getRoot());
             }
             printAllCarsWithCondition(tree.getLeft(), condition);
@@ -134,7 +134,8 @@ public class Menu implements Serializable{
 
     private void printAllCars(RedBlackTree<Car> tree) {
         if(!tree.isEmpty()) {
-            printCar(tree.getRoot());
+            if (!tree.nodeIsDead())
+                 printCar(tree.getRoot());
             printAllCars(tree.getLeft());
             printAllCars(tree.getRight());
         }
@@ -144,8 +145,8 @@ public class Menu implements Serializable{
         tree.insert(car);
     }
 
-    public void delete(RedBlackTree<Car> tree, Car car) {
-        tree.deleteNode(car);
+    public void logicDelete(RedBlackTree<Car> tree, Car car) {
+        tree.killNode(car);
     }
 
     public void changeCarPatent(RedBlackTree<Car> tree, Car car, int carPatent) {
@@ -197,14 +198,17 @@ public class Menu implements Serializable{
         if (tree.isEmpty()) {
             return 0;
         }
-        return 1 + amountOfElements(tree.getLeft()) + amountOfElements(tree.getRight());
+        if(!tree.nodeIsDead())
+            return 1 + amountOfElements(tree.getLeft()) + amountOfElements(tree.getRight());
+        return amountOfElements(tree.getLeft()) + amountOfElements(tree.getRight());
+
     }
 
     public int amountOfElementsWithCondition(RedBlackTree<Car> tree, Condition condition) {
         if (tree.isEmpty()) {
             return 0;
         }
-        if(condition.evaluate(tree.getRoot())){
+        if(condition.evaluate(tree.getRoot()) && !tree.nodeIsDead()){
             return 1 + amountOfElementsWithCondition(tree.getLeft(),condition) + amountOfElementsWithCondition(tree.getRight(), condition);
         }
         return amountOfElementsWithCondition(tree.getLeft(),condition) + amountOfElementsWithCondition(tree.getRight(), condition);

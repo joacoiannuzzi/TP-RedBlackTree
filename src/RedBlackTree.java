@@ -2,12 +2,17 @@ import java.io.Serializable;
 
 public class RedBlackTree<T extends Comparable<T>> implements Serializable {
 
-    private class Node<T extends Comparable<T>> implements Serializable{
+    private class Node<T extends Comparable<T>> implements Serializable {
         Comparable<T> data; // holds the key
         Node parent; // pointer to the parent
         Node left; // pointer to left child
         Node right; // pointer to right child
         int color; // 1 . Red, 0 . Black
+        boolean isDead;
+    }
+
+    public boolean nodeIsDead(){
+        return root.isDead;
     }
 
     private Node root;
@@ -15,6 +20,28 @@ public class RedBlackTree<T extends Comparable<T>> implements Serializable {
 
     public boolean isEmpty() {
         return root.data == null;
+    }
+
+    public void compact() {
+        searchDeadNode(this.root);
+    }
+
+    public void killNode(Comparable<T> k) {
+        search(this.root, k).isDead = true;
+    }
+    
+    private void searchDeadNode(Node node) {
+        if (node != null){
+            if (node.isDead) 
+                deleteNode(node.data);
+            searchDeadNode(node.left);
+            searchDeadNode(node.right);
+        }
+    }
+    
+    // logicDelete the node from the tree
+    public void deleteNode(Comparable<T> data) {
+        deleteNodeHelper(this.root, data);
     }
 
     public RedBlackTree<T> getLeft() {
@@ -42,7 +69,7 @@ public class RedBlackTree<T extends Comparable<T>> implements Serializable {
         return search(node.right, key);
     }
 
-    // fix the rb tree modified by the delete operation
+    // fix the rb tree modified by the logicDelete operation
     private void fixDelete(Node x) {
         Node s;
         while (x != root && x.color == 0) {
@@ -382,8 +409,4 @@ public class RedBlackTree<T extends Comparable<T>> implements Serializable {
         return (T) this.root.data;
     }
 
-    // delete the node from the tree
-    public void deleteNode(Comparable<T> data) {
-        deleteNodeHelper(this.root, data);
-    }
 }
